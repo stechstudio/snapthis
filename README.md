@@ -20,16 +20,16 @@ SNAPTHIS_API_KEY=[your api key]
 
 ## Quickstart
 
-Take a snapshot by using the `snapshot` or `pdf` methods:
+Take a snapshot by using the `snapshot` or `pdf` methods. Return this result from a controller method to redirect to the snapshot:
 
 ```php
 use SnapThis;
 
-// Will take a PNG image snapshot
-SnapThis::snapshot('https://laravel.com');
+// Will take a PNG image snapshot and redirect the user:
+return SnapThis::snapshot('https://laravel.com');
 ```
 
-Return this result from a controller method to redirect to the snapshot, or add the `download` method to force the snapshot to download for your user.
+Or add the `download` method to force the snapshot to download for your user.
 
 ```php
 return SnapThis::pdf('https://laravel.com')->download();
@@ -51,6 +51,7 @@ You can also pass in a blade view, then simply chain the `snapshot` or `pdf` met
 
 ```php
 $users = User::all();
+
 return SnapThis::view('reports.users', ['users' => $users])->pdf();
 ```
 
