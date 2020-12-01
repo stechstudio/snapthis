@@ -1,0 +1,53 @@
+{
+    "name": "stechstudio/snapthis",
+    "description": "PHP SDK for SnapThis screenshot service",
+    "keywords": [
+        "screenshot",
+        "snapthis"
+    ],
+    "homepage": "https://github.com/stechstudio/snapthis",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joseph Szobody",
+            "email": "joseph@stechstudio.com",
+            "homepage": "https://stechstudio.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "STS\\SnapThis\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "STS\\SnapThis\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "STS\\SnapThis\\SnapThisServiceProvider"
+            ],
+            "aliases": {
+                "SnapThis": "STS\\SnapThis\\Facades\\SnapThis"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
