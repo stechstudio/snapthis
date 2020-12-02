@@ -2,51 +2,30 @@
 
 namespace STS\SnapThis;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Support\Arr;
+use STS\Record\Record;
 
-class Snapshot implements Responsable
+class Snapshot extends Record implements Responsable
 {
-    protected array $response;
-
-    public function __construct(array $response)
+    public function getExpiresAtAttribute()
     {
-        $this->response = $response;
-    }
-
-    public function url()
-    {
-        return Arr::get($this->response, 'url');
-    }
-
-    public function downloadUrl()
-    {
-        return Arr::get($this->response, 'download');
-    }
-
-    public function inlineUrl()
-    {
-        return Arr::get($this->response, 'inline');
-    }
-
-    public function size()
-    {
-        return Arr::get($this->response, 'size');
+        return new Carbon($this->expires);
     }
 
     public function redirect()
     {
-        return response()->redirectTo($this->inlineUrl());
+        return response()->redirectTo($this->inline_url);
     }
 
     public function download()
     {
-        return response()->redirectTo($this->downloadUrl());
+        return response()->redirectTo($this->download_url);
     }
 
     public function contents()
     {
-        return file_get_contents($this->url());
+        return file_get_contents($this->url);
     }
 
     public function toResponse($request)

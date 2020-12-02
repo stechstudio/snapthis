@@ -2,6 +2,7 @@
 
 namespace STS\SnapThis;
 
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -206,6 +207,20 @@ class Client
     public function headers(array $headers)
     {
         $this->payload['headers'] = $headers;
+
+        return $this;
+    }
+
+    public function expiration(Carbon $expiration)
+    {
+        $this->payload['expiration'] = $expiration->toISOString();
+
+        return $this;
+    }
+
+    public function lifetime(int $lifetime)
+    {
+        $this->payload['lifetime'] = $lifetime;
 
         return $this;
     }
