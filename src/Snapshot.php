@@ -23,6 +23,11 @@ class Snapshot extends Record implements Responsable
         return new Carbon($this->expires);
     }
 
+    public function canRedirect()
+    {
+        return $this->has('inline_url');
+    }
+
     public function redirect()
     {
         return response()->redirectTo($this->inline_url);
@@ -39,6 +44,11 @@ class Snapshot extends Record implements Responsable
         }
     }
 
+    public function inline()
+    {
+        return response()->file($this->contents());
+    }
+
     public function contents()
     {
         return $this->has('contents')
@@ -48,6 +58,8 @@ class Snapshot extends Record implements Responsable
 
     public function toResponse($request)
     {
-        return $this->redirect();
+        return $this->canRedirect()
+            ? $this->redirect()
+            : $this->inline();
     }
 }
