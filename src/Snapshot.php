@@ -43,7 +43,7 @@ class Snapshot extends Record implements Responsable
         if($this->has('contents')) {
             return response()->make($this->contents(), 200, [
                 'Content-Type' => $this->contentType(),
-                'Content-Disposition' => 'attachment; filename="' . $this->name . '"'
+                'Content-Disposition' => 'attachment; filename="' . $this->filename . '"'
             ]);
         }
     }
