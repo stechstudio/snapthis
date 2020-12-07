@@ -4,6 +4,7 @@ namespace STS\SnapThis;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Support\Arr;
 use STS\Record\Record;
 use STS\SnapThis\Exceptions\SnapshotException;
 
@@ -40,13 +41,24 @@ class Snapshot extends Record implements Responsable
         }
 
         if($this->has('contents')) {
-            return response()->download($this->contents(), $this->name);
+            return response()->make($this->contents(), 200, [
+                'Content-Type' => $this->contentType(),
+                'Content-Disposition' => 'attachment; filename="' . $this->name . '"'
+            ]);
         }
     }
 
     public function inline()
     {
-        return response()->file($this->contents());
+        return response()->make($this->contents(), 200, ['Content-Type' => $this->contentType()]);
+    }
+
+    public function contentType()
+    {
+        return Arr::get([
+            'pdf' => 'application/pdf',
+            'png' => 'image/png'
+        ], pathinfo($this->name, PATHINFO_EXTENSION));
     }
 
     public function contents()
