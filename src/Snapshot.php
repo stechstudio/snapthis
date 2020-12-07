@@ -12,7 +12,7 @@ class Snapshot extends Record implements Responsable
     public function verifyPayload()
     {
         if($this->has('name') &&  ($this->has('url') || $this->has('url'))) {
-            return true;
+            return $this;
         }
 
         throw new SnapshotException("Invalid snapshot payload");
