@@ -224,4 +224,18 @@ class Client
 
         return $this;
     }
+
+    public function private()
+    {
+        $this->payload['private'] = true;
+
+        return $this;
+    }
+
+    public function inline()
+    {
+        $this->payload['inline'] = true;
+
+        return $this;
+    }
 }

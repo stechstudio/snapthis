@@ -20,12 +20,20 @@ class Snapshot extends Record implements Responsable
 
     public function download()
     {
-        return response()->redirectTo($this->download_url);
+        if($this->has('download_url')) {
+            return response()->redirectTo($this->download_url);
+        }
+
+        if($this->has('contents')) {
+            return response()->download($this->contents(), $this->name);
+        }
     }
 
     public function contents()
     {
-        return file_get_contents($this->url);
+        return $this->has('contents')
+            ? base64_decode($this->contents)
+            : file_get_contents($this->url);
     }
 
     public function toResponse($request)
