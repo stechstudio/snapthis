@@ -5,9 +5,19 @@ namespace STS\SnapThis;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Responsable;
 use STS\Record\Record;
+use STS\SnapThis\Exceptions\SnapshotException;
 
 class Snapshot extends Record implements Responsable
 {
+    public function verifyPayload()
+    {
+        if($this->has('name') &&  ($this->has('url') || $this->has('url'))) {
+            return true;
+        }
+
+        throw new SnapshotException("Invalid snapshot payload");
+    }
+
     public function getExpiresAtAttribute()
     {
         return new Carbon($this->expires);

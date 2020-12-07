@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use STS\SnapThis\Exceptions\SnapshotException;
 
 class Client
 {
@@ -103,9 +104,17 @@ class Client
 
     public function take()
     {
-        return new Snapshot(
-            Http::post($this->endpoint, $this->payload)->json()
-        );
+        $response = Http::post($this->endpoint, $this->payload);
+
+        if($response->status() == 200) {
+            return (new Snapshot($response->json()))->verifyPayload();
+        }
+
+        if($response->status() == 500 && $response->json('message', false)) {
+            throw new SnapshotException($response->json('message'));
+        }
+
+        throw new SnapshotException("Unknown failure");
     }
 
     public function name($name)
