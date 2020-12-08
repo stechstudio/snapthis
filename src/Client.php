@@ -4,6 +4,7 @@ namespace STS\SnapThis;
 
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -29,7 +30,7 @@ class Client
 
     public function applyDefaults()
     {
-        if(static::$defaults) {
+        if (static::$defaults) {
             call_user_func(static::$defaults, $this);
         }
 
@@ -106,11 +107,11 @@ class Client
     {
         $response = Http::post($this->endpoint, $this->payload);
 
-        if($response->status() == 200) {
+        if ($response->status() == 200) {
             return (new Snapshot($response->json()))->verifyPayload();
         }
 
-        if($response->status() == 500 && $response->json('message', false)) {
+        if ($response->status() == 500 && $response->json('message', false)) {
             throw new SnapshotException($response->json('message'));
         }
 
@@ -185,28 +186,30 @@ class Client
         return $this;
     }
 
-    public function margins($top, $right, $bottom, $left, $unit = 'mm')
+    public function margins(float $top, float $right, float $bottom, float $left, string $unit = 'in')
     {
+        $unit = in_array($unit, ['mm', 'cm', 'in', 'px']) ? $unit : 'in';
+
         $this->payload['margins'] = [$top, $right, $bottom, $left, $unit];
 
         return $this;
     }
 
-    public function header($html)
+    public function header(string $html)
     {
         $this->payload['header'] = $html;
 
         return $this;
     }
 
-    public function footer($html)
+    public function footer(string $html)
     {
         $this->payload['footer'] = $html;
 
         return $this;
     }
 
-    public function media($media)
+    public function media(string $media)
     {
         $this->payload['media'] = $media;
 
@@ -246,5 +249,14 @@ class Client
         $this->payload['inline'] = true;
 
         return $this;
+    }
+
+    public function resizeTo(int $width, int $height, $method = null)
+    {
+        $method = in_array($method, ['contain', 'crop'])
+            ? $method
+            : 'contain';
+
+        $this->payload['resize'] = [$width, $height, $method];
     }
 }
