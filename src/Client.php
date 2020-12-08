@@ -4,7 +4,6 @@ namespace STS\SnapThis;
 
 use Carbon\Carbon;
 use Closure;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -12,9 +11,9 @@ use STS\SnapThis\Exceptions\SnapshotException;
 
 class Client
 {
-    protected string $endpoint = 'https://api.snapthis.io';
+    protected $endpoint = 'https://api.snapthis.io';
 
-    protected array $payload = [];
+    protected $payload = [];
 
     protected static $defaults;
 
@@ -37,21 +36,21 @@ class Client
         return $this;
     }
 
-    public function url($url)
+    public function url(string $url)
     {
         $this->payload['url'] = $url;
 
         return $this;
     }
 
-    public function html($html)
+    public function html(string $html)
     {
         $this->payload['html'] = $html;
 
         return $this;
     }
 
-    public function view($view, $data = [], $mergeData = [])
+    public function view(string $view, $data = [], $mergeData = [])
     {
         return $this->html(
             view($view, $data, $mergeData)->render()
@@ -69,7 +68,7 @@ class Client
             : $this->html($contents);
     }
 
-    public function output($output)
+    public function output(string $output)
     {
         $this->payload['output'] = $output;
 
@@ -118,7 +117,7 @@ class Client
         throw new SnapshotException("Unknown failure");
     }
 
-    public function name($name)
+    public function name(string $name)
     {
         $this->payload['filename'] = $name;
 
@@ -149,6 +148,13 @@ class Client
     public function windowSize(int $width, int $height)
     {
         $this->payload['windowSize'] = [$width, $height];
+
+        return $this;
+    }
+
+    public function deviceScale(int $scale)
+    {
+        $this->payload['deviceScale'] = $scale;
 
         return $this;
     }
@@ -251,12 +257,12 @@ class Client
         return $this;
     }
 
-    public function resizeTo(int $width, int $height, $method = null)
+    public function resizeTo(int $width, int $height, $method = 'contain')
     {
-        $method = in_array($method, ['contain', 'crop'])
-            ? $method
-            : 'contain';
+        $method = in_array($method, ['contain', 'crop']) ? $method : 'contain';
 
         $this->payload['resize'] = [$width, $height, $method];
+
+        return $this;
     }
 }
