@@ -161,7 +161,7 @@ class Client
 
     public function pageSize(string $pageSize)
     {
-        $this->payload['windowSize'] = $pageSize;
+        $this->payload['pageSize'] = $pageSize;
 
         return $this;
     }
